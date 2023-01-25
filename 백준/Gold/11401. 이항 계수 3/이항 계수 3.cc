@@ -26,9 +26,12 @@ int main() {
     inv[0] = 1;
     for (int i = 1; i <= MAX; i++) {
         fact[i] = fact[i-1] * i % MOD;
-        inv[i] = modpow(fact[i], MOD-2) % MOD;
     }
-    
+    inv[MAX] = modpow(fact[MAX], MOD-2);
+    for (int i = MAX-1; i >= 0; i--) {
+        inv[i] = inv[i+1] * (i+1) % MOD;
+    }
+
     cout << fact[n] * inv[k] % MOD * inv[n-k] % MOD;
 
     return 0;
