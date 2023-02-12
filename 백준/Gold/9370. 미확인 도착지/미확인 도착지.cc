@@ -26,9 +26,8 @@ int main() {
             cin >> x;
         }
 
-        auto dijkstra = [&](int start, int end) {
+        auto dijkstra = [&](int start, int end, int dist[]) {
             priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq; // cost, node
-            int dist[2001];
             fill(dist, dist+2001, 1e9);
             dist[start] = 0;
             pq.emplace(0, start);
@@ -50,9 +49,12 @@ int main() {
         // s -> g -> h -> x / s -> h -> g -> x 최단거리
         set<int> ans;
         for (auto x : dest) {
-            int total = dijkstra(s, x);
-            int sghx = dijkstra(s, g) + gh + dijkstra(h, x);
-            int shgx = dijkstra(s, h) + gh + dijkstra(g, x);
+            int dist[2001];
+            int total = dijkstra(s, x, dist);
+            int sghx = dist[g] + gh;
+            int shgx = dist[h] + gh;
+            sghx += dijkstra(h, x, dist);
+            shgx += dijkstra(g, x, dist);
             if (total == sghx || total == shgx) {
                 ans.emplace(x);
             }
