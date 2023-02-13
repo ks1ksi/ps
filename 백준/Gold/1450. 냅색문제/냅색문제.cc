@@ -38,21 +38,16 @@ int main() {
     //     cout << a << ' ' << b << '\n';
     // }
 
-    vector<pair<ll, ll>> pv1, pv2;
-    for (auto p : m1) {
-        pv1.emplace_back(p);
+    vector<ll> cnts;
+    for (auto [a, b] : m2) {
+        while (b--) cnts.emplace_back(a);
     }
-    for (auto p : m2) {
-        pv2.emplace_back(p);
-    }
+    sort(cnts.begin(), cnts.end());
 
     ll ans = 0;
-    for (auto [a, b] : pv1) {
-        for (auto [c, d] : pv2) {
-            if (a + c <= C) ans += b * d;
-        }
+    for (auto [a, b] : m1) {
+        ans += (upper_bound(cnts.begin(), cnts.end(), C - a) - cnts.begin()) * b;
     }
-
     cout << ans;
 
     return 0;
