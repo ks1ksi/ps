@@ -1,6 +1,8 @@
 import sys
 input = sys.stdin.readline
 
+sys.setrecursionlimit(100000)
+
 n = int(input())
 tree = [[] for _ in range(n+1)]
 dist = [0] * (n+1)
