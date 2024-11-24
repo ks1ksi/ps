@@ -1,3 +1,1 @@
-fun main() {
-    println(readln().length)
-}
+fun main()=println(readln().length)
