@@ -1,4 +1,5 @@
 val reader = System.`in`.bufferedReader()
+val writer = System.out.bufferedWriter()
 
 fun main() {
     val (n, m) = reader.readLine().split(" ").map { it.toInt() }
@@ -12,6 +13,8 @@ fun main() {
 
     repeat(m) {
         val a = reader.readLine()
-        println(map[a])
+        writer.write("${map[a]}\n")
     }
+
+    writer.flush()
 }
