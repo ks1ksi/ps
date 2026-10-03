@@ -2,79 +2,47 @@
 
 using namespace std;
 
+
 int solution(vector<string> friends, vector<string> gifts) {
-    int answer = 0;
-    
-    map<string, map<string, int>> give;
-    map<string, map<string, int>> take;
-    
-    for (auto& s : gifts) {
-        stringstream ss(s);
-        string g, t;
-        ss >> g >> t;
-        give[g][t]++;
-        take[t][g]++;
+    int n = friends.size();
+
+    unordered_map<string, int> id;
+    for (int i = 0; i < n; i++) {
+        id[friends[i]] = i;
     }
-    
-    
-    for (auto& [k, v] : give) {
-        cout << k << ": ";
-        for (auto& [kk, vv] : v) {
-            cout << kk << ' ' << vv << ' ';
-        }
-        cout << '\n';
+
+    vector<vector<int>> give(n, vector<int>(n, 0));
+    vector<int> score(n, 0);
+    vector<int> received(n, 0);
+
+    for (const auto& gift : gifts) {
+        stringstream ss(gift);
+        string from, to;
+        ss >> from >> to;
+
+        int a = id[from];
+        int b = id[to];
+
+        give[a][b]++;
+        score[a]++;
+        score[b]--;
     }
-    
-    map<string, int> score;
-    
-    for (auto& s : friends) {
-        int g = 0;
-        for (auto& [k, v] : give[s]) {
-            g += v;
-        }
-        
-        int t = 0;
-        for (auto& [k, v] : take[s]) {
-            t += v;
-        }
-        score[s] = g - t; 
-    }
-    
-    for (auto& [k, v] : score) {
-        cout << k << ' ' << v << '\n';
-    }
-    
-    map<string, int> ans;
-    
-    for (auto& s1 : friends) {
-        for (auto& s2 : friends) {
-            if (s1 == s2) continue;
-            
-            if (give[s1][s2] > give[s2][s1]) {
-                ans[s1]++;
+
+    for (int a = 0; a < n; a++) {
+        for (int b = a + 1; b < n; b++) {
+            int diff = give[a][b] - give[b][a];
+
+            if (diff == 0) {
+                diff = score[a] - score[b];
             }
-            else if (give[s1][s2] < give[s2][s1]) {
-                ans[s2]++;
-            }
-            else {
-                if (score[s1] > score[s2]) {
-                    ans[s1]++;
-                }
-                else if (score[s1] < score[s2]) {
-                    ans[s2]++;
-                }
+
+            if (diff > 0) {
+                received[a]++;
+            } else if (diff < 0) {
+                received[b]++;
             }
         }
     }
-    
-    cout << "ANS====\n";
-    for (auto& [k, v] : ans) {
-        cout << k << ' ' << v << '\n';
-    }
-    
-    for (auto& [k, v] : ans) {
-        answer = max(answer, v);
-    }
-    
-    return answer / 2;
+
+    return *max_element(received.begin(), received.end());
 }
